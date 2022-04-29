@@ -11,15 +11,17 @@ export AWS_ACCOUNT_ID="SEU_ID_DE_ACESSO"
 source ~/.bash_profile
 ```
 
-- na raiz do projeto rodar o comando:
+# alterar o nome da fila na classe Utils:
+
+ - Para fila fifo: nome-da-fila.fifo;
+
+ - Para fila padrão: nome-da-fila
+
+
+# na raiz do projeto rodar o comando:
 
 ```shell
 ./buld.sh
-```
-
-- na raiz do projeto rodar o programa consomer:
-
-```shell
 ./start_consomer.sh
 ```
 
