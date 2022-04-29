@@ -1,0 +1,8 @@
+Diferença entre sqs e sns
+
+SNS tem escopo global enquanto sqs tem escopo regional;
+SNS é um serviço mais abrangente que pode funcionar com distribuição de notificações por tópicos para seus diferentes subscribers como SQS, LAMBDA, EMAI.
+
+SQS é um sistema de enfileiramento para processamento de mensagens, ela puxa a sua lista para 
+descobrir novos eventos e estes eventos são tipicamente processados por um único consumidor ou serviço. 
+SQS não dispara nenhum evento para que estas mensagem possam ser consumidas, consumidores precisam monitorar e processar as messagens que chegam.
