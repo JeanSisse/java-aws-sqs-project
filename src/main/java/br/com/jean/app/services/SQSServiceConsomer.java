@@ -8,6 +8,7 @@ import software.amazon.awssdk.services.sqs.model.DeleteMessageRequest;
 import software.amazon.awssdk.services.sqs.model.GetQueueUrlResponse;
 import software.amazon.awssdk.services.sqs.model.Message;
 import software.amazon.awssdk.services.sqs.model.ReceiveMessageRequest;
+import software.amazon.awssdk.services.sqs.model.SqsException;
 
 public class SQSServiceConsomer {
 
@@ -23,22 +24,42 @@ public class SQSServiceConsomer {
 		}
 
 		deleteMessages(sqsClient, createResult.queueUrl(), messages);
-
 		sqsClient.close();
 	}
 
 	public static List<Message> receiveMessages(SqsClient sqsClient, String queueUrl) {
-		ReceiveMessageRequest receiveMessageRequest = ReceiveMessageRequest.builder().queueUrl(queueUrl).waitTimeSeconds(20)
-				.maxNumberOfMessages(5).build();
-		List<Message> messages = sqsClient.receiveMessage(receiveMessageRequest).messages();
-		return messages;
+		System.out.println("\nReceive messages");
+		
+		try {
+			ReceiveMessageRequest receiveRequest = ReceiveMessageRequest.builder()
+					.queueUrl(queueUrl)
+					.waitTimeSeconds(20) // Enable long polling on a message receipt.
+					.maxNumberOfMessages(5).build();
+			List<Message> messages = sqsClient.receiveMessage(receiveRequest).messages();
+			return messages;
+			
+		} catch (SqsException ex) {
+			System.err.println(ex.awsErrorDetails().errorMessage());
+      System.exit(1);
+		}
+		return null;
 	}
 
 	public static void deleteMessages(SqsClient sqsClient, String queueUrl, List<Message> messages) {
-		for (Message message : messages) {
-			DeleteMessageRequest deleteMessageRequest = DeleteMessageRequest.builder().queueUrl(queueUrl)
-					.receiptHandle(message.receiptHandle()).build();
-			sqsClient.deleteMessage(deleteMessageRequest);
+		System.out.println("\nDelete Messages");
+    // snippet-start:[sqs.java2.sqs_example.delete_message]
+		try {
+			for (Message message : messages) {
+				DeleteMessageRequest deleteMessageRequest = DeleteMessageRequest.builder()
+						.queueUrl(queueUrl)
+						.receiptHandle(message.receiptHandle())
+						.build();
+				sqsClient.deleteMessage(deleteMessageRequest);
+			}
+			
+		} catch (SqsException ex) {
+			System.err.println(ex.awsErrorDetails().errorMessage());
+      System.exit(1);
 		}
 	}
 }

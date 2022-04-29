@@ -14,9 +14,8 @@ source ~/.bash_profile
 # alterar o nome da fila na classe Utils:
 
  - Para fila fifo: nome-da-fila.fifo;
-
+ - descomentar a linha contendo ".messageGroupId" na classe SQSServiceSender (deixar comentado caso envio seja para fila padrão)
  - Para fila padrão: nome-da-fila
-
 
 # na raiz do projeto rodar o comando:
 
